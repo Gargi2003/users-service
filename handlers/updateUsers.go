@@ -9,6 +9,7 @@ import (
 
 type UpdateRequest struct {
 	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 func UpdateUser(c *gin.Context) {

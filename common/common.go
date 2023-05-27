@@ -12,6 +12,7 @@ import (
 type Users struct {
 	ID       int    `json:"id"`
 	UserName string `json:"username"`
+	Password string `json:"password"`
 }
 
 const (
@@ -21,6 +22,7 @@ const (
 	Topology   = "tcp"
 	Port       = "localhost:3306"
 	DriverName = "mysql"
+	SecretKey  = "khsiudjsb12jhb4!"
 )
 
 var Logger zerolog.Logger = zerolog.New(os.Stdout)

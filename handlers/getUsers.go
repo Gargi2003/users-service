@@ -48,7 +48,7 @@ func parseRows(rows *sql.Rows) *[]utils.Users {
 
 	for rows.Next() {
 		var user utils.Users
-		rows.Scan(&user.ID, &user.UserName)
+		rows.Scan(&user.ID, &user.UserName, &user.Password)
 		users = append(users, user)
 	}
 	return &users

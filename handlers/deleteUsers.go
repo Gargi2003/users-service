@@ -7,6 +7,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// DeleteUser deletes a user by ID
+// @Summary Delete a user
+// @Description Delete a user by providing the user ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id query string true "User ID"
+// @Success 200 {string} string "User Deleted!"
+// @Failure 400 {string} string "Error executing query"
+// @Failure 404 {string} string "User not found"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /users/delete [delete]
 func DeleteUser(c *gin.Context) {
 	db, err := utils.DBConn(utils.Username, utils.Password, utils.Dbname, utils.Port)
 	if err != nil {

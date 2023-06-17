@@ -8,6 +8,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetUsernameById retrieves the username by ID
+// @Summary Get username by ID
+// @Description Retrieve the username by providing the user ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id query string true "User ID"
+// @Success 200 {string} string "Username"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /users/username [get]
 func GetUsernameById(c *gin.Context) {
 	db, err := utils.DBConn(utils.Username, utils.Password, utils.Dbname, utils.Port)
 	if err != nil {
@@ -32,6 +42,13 @@ func GetUsernameById(c *gin.Context) {
 	c.JSON(http.StatusOK, &user.UserName)
 }
 
+// ListUser godoc
+// @Summary List Users
+// @Description Get a list of all users
+// @Tags Users
+// @Produce json
+// @Success 200 {array} utils.Users
+// @Router /users [get]
 func ListUser(c *gin.Context) {
 	db, err := utils.DBConn(utils.Username, utils.Password, utils.Dbname, utils.Port)
 	if err != nil {

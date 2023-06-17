@@ -10,6 +10,21 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type LoginResponse struct {
+	Status string `json:"status"`
+	Token  string `json:"token"`
+}
+
+// Login handles the user login request
+// @Summary User Login
+// @Description Logs in a user and returns a JWT token
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param request body CreateRequest true "User login credentials"
+// @Success 200 {object} LoginResponse
+// @Failure 400 {string} string
+// @Router /login [post]
 func Login(c *gin.Context) {
 	//connect to db
 	db, err := utils.DBConn(utils.Username, utils.Password, utils.Dbname, utils.Port)

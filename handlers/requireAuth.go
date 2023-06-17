@@ -10,6 +10,17 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
+// RequireAuth middleware ensures that the request is authenticated with a valid JWT token
+// @Summary Require Authentication
+// @Description Middleware to check if the request is authenticated
+// @Tags Authentication
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "JWT token"
+// @Success 200 {string} string
+// @Failure 401 {string} string
+// @Router /auth [get]
 func RequireAuth(c *gin.Context) {
 	//get the cookie from the req
 	tokenString, err := c.Cookie("Authorization")

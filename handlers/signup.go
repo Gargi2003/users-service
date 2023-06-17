@@ -13,6 +13,17 @@ type CreateRequest struct {
 	Password string `json:"password"`
 }
 
+// Signup creates a new user account
+// @Summary Create User
+// @Description Create a new user account
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param user body CreateRequest true "User object"
+// @Success 202 {string} string
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /signup [post]
 func Signup(c *gin.Context) {
 
 	//connect to db

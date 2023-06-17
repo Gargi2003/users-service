@@ -12,6 +12,17 @@ type UpdateRequest struct {
 	Password string `json:"password"`
 }
 
+// UpdateUser updates an existing user
+// @Summary Update User
+// @Description Update an existing user
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id query string true "User ID"
+// @Param user body UpdateRequest true "User object"
+// @Success 202 {string} string
+// @Failure 400 {string} string
+// @Router /users [put]
 func UpdateUser(c *gin.Context) {
 	db, err := utils.DBConn(utils.Username, utils.Password, utils.Dbname, utils.Port)
 	if err != nil {

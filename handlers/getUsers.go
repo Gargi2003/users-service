@@ -34,7 +34,7 @@ func GetUsernameById(c *gin.Context) {
 	user := utils.Users{}
 	for rows.Next() {
 
-		err := rows.Scan(&user.ID, &user.UserName, &user.Password)
+		err := rows.Scan(&user.ID, &user.UserName, &user.Password, &user.Email)
 		if err != nil {
 			utils.Logger.Err(err).Msg("Error unmarshalling into struct from db")
 		}
@@ -60,7 +60,8 @@ func ListUser(c *gin.Context) {
 	query := "select * from users"
 	rows, err1 := db.Query(query)
 	if err1 != nil {
-		utils.Logger.Err(err).Msgf("Error executing query: ", err)
+		utils.Logger.Err(err1).Msg("Error executing query")
+		c.JSON(http.StatusInternalServerError, "Errror executing query")
 		return
 	}
 	users := parseRows(rows)
@@ -72,7 +73,7 @@ func parseRows(rows *sql.Rows) *[]utils.Users {
 
 	for rows.Next() {
 		var user utils.Users
-		rows.Scan(&user.ID, &user.UserName, &user.Password)
+		rows.Scan(&user.ID, &user.UserName, &user.Password, &user.Email)
 		users = append(users, user)
 	}
 	return &users

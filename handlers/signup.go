@@ -11,6 +11,7 @@ import (
 type CreateRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+	Email    string `json:"email"`
 }
 
 // Signup creates a new user account
@@ -49,7 +50,7 @@ func Signup(c *gin.Context) {
 		return
 	}
 	//create user
-	if _, err := db.Query("INSERT INTO users (username,password) VALUES (?,?)", req.Username, string(hashedPass)); err != nil {
+	if _, err := db.Query("INSERT INTO users (username,password,email) VALUES (?,?,?)", req.Username, string(hashedPass), req.Email); err != nil {
 		utils.Logger.Err(err).Msg("Error executing query")
 		c.JSON(http.StatusBadRequest, "Error executing query:  "+err.Error())
 		return

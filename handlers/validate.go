@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
+	utils "users/common"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +18,11 @@ import (
 // @Router /validate [get]
 func Validate(c *gin.Context) {
 
-	user, _ := c.Get("user")
+	user, ok := c.Get("user")
+	fmt.Println(user)
+	if !ok {
+		utils.Logger.Err(fmt.Errorf("Error getting user"))
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": user,

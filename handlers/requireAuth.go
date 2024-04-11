@@ -24,8 +24,9 @@ import (
 func RequireAuth(c *gin.Context) {
 	//get the cookie from the req
 	tokenString, err := c.Cookie("Authorization")
-	utils.Logger.Info().Msg(tokenString)
+	utils.Logger.Info().Msg("Token string" + tokenString)
 	if err != nil {
+		utils.Logger.Info().Msg("Authorization not found")
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
 	//decode or validate it
@@ -39,6 +40,7 @@ func RequireAuth(c *gin.Context) {
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		//check the expiry
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
+			utils.Logger.Info().Msg("token expired")
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 
@@ -50,7 +52,7 @@ func RequireAuth(c *gin.Context) {
 		}
 		defer db.Close()
 		var user utils.Users
-		db.QueryRow("select * from users where id=?", claims["sub"]).Scan(&user.ID, &user.UserName, &user.Password)
+		db.QueryRow("select * from users where id=?", claims["sub"]).Scan(&user.ID, &user.UserName, &user.Password, &user.Email)
 		if err != nil {
 			utils.Logger.Err(err).Msg("Error executing query")
 			c.JSON(http.StatusBadRequest, "Error executing query:  "+err.Error())
@@ -62,7 +64,6 @@ func RequireAuth(c *gin.Context) {
 
 		// attach to the req
 		c.Set("user", &user)
-
 		//continue
 		c.Next()
 

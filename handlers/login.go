@@ -10,11 +10,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type LoginResponse struct {
-	Status string `json:"status"`
-	Token  string `json:"token"`
-}
-
 // Login handles the user login request
 // @Summary User Login
 // @Description Logs in a user and returns a JWT token
@@ -42,10 +37,10 @@ func Login(c *gin.Context) {
 	}
 	//look up requested user
 	var userId string
-	db.QueryRow("select id from users where username=?", req.Username).Scan(&userId)
-	if err != nil {
-		utils.Logger.Err(err).Msg("Error executing query")
-		c.JSON(http.StatusBadRequest, "Error executing query:  "+err.Error())
+	err1 := db.QueryRow("select id from users where username=?", req.Username).Scan(&userId)
+	if err1 != nil {
+		utils.Logger.Err(err1).Msg("Error executing query")
+		c.JSON(http.StatusBadRequest, "Error executing query:  "+err1.Error())
 		return
 	}
 	// compare sent in pass with saved user pass in db
@@ -56,12 +51,18 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, "Invalid username or password:  "+err.Error())
 		return
 	}
+	expirationTime := time.Now().Add(time.Minute * 30).Unix()
 
 	// generate a jwt token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": userId,
-		"exp": time.Now().Add(time.Minute * 30).Unix(),
+		"exp": expirationTime,
 	})
+	// Convert the token expiration time to a string
+	expirationString := time.Unix(expirationTime, 0).String()
+
+	// Log the token expiration
+	utils.Logger.Info().Msgf("Token expiration: %s", expirationString)
 
 	//sign and get the entire token using a secret key
 	tokenString, err := token.SignedString([]byte(utils.SecretKey))
@@ -73,7 +74,7 @@ func Login(c *gin.Context) {
 
 	//set cookie
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", tokenString, 300, "", "", false, true)
+	c.SetCookie("Authorization", tokenString, 1800, "", "", false, true)
 
 	//send it back
 	c.JSON(http.StatusOK, gin.H{

@@ -17,8 +17,8 @@ type Users struct {
 }
 
 const (
-	[REDACTED_USERNAME]
-	[REDACTED_PASSWORD]
+	Username = "diya"
+	Password = "diyajgec!"
 	Dbname   = "todo_manager"
 	Topology = "tcp"
 	// Port       = "users-service-db-1:3306"
